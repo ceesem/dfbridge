@@ -5,6 +5,9 @@ import codecs
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+with open(os.path.join(here, "README.md"), encoding="utf-8") as f:
+    long_description = f.read()
+
 
 def read(*parts):
     with codecs.open(os.path.join(here, *parts), "r") as fp:
@@ -39,6 +42,8 @@ setuptools.setup(
     author="Casey Schneider-Mizell",
     author_email="caseysm@gmail.com",
     description="Schematized pipeline operations on dataframes",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     install_requires=required,
     include_package_data=True,
     dependency_links=dependency_links,
