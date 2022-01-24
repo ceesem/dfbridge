@@ -39,3 +39,5 @@ schema = {
     },
 }
 ```
+
+For convenience, if you just use `final_name1`: `original_name`, it will be equivalent to a simple renaming, and if you use `final_name2`: function, it will be equivalent to a simple apply of that function.
