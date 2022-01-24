@@ -7,7 +7,7 @@ def make_longform_schema(schema):
     for k, v in schema.items():
         if isinstance(v, dict):
             schema_out[k] = v
-        elif isinstance(v, str):
+        elif isinstance(v, str) or v is None:
             schema_out[k] = {"type": "rename", "from": v}
         elif isfunction(v):
             schema_out[k] = {"type": "apply", "func": v}
@@ -52,7 +52,7 @@ def _remap(values, remap_dict, strict_remap):
     if strict_remap:
         func = lambda x: remap_dict.get(x, pd.NA)
     else:
-        func = lambda x: remap_dict.get(x) if x in remap_dict else x
+        func = lambda x: remap_dict.get(x, x)
 
     return [func(x) for x in values]
 
@@ -86,4 +86,5 @@ class DataframeBridge(object):
                 )
             if v.get("column_type"):
                 df_out[k] = df_out[k].astype(v.get("column_type"))
+        df_out.attrs = df_in.attrs
         return df_out
