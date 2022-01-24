@@ -65,17 +65,20 @@ class DataframeBridge(object):
     }
 
     def __init__(self, schema):
-        schema = make_longform_schema(schema)
-        self._schema = schema
+        if schema is not None:
+            schema = make_longform_schema(schema)
+        self.schema = schema
 
     @property
     def output_columns(self):
-        return list(self._schema.keys())
+        return list(self.schema.keys())
 
     def reformat(self, df_in):
-        """Reformat dataframe according to the schema"""
+        """Reformat a dataframe according to the schema. The returned dataframe will have the same number of rows, but converted columns."""
+        if self.schema is None:
+            return df_in
         df_out = pd.DataFrame(index=df_in.index, columns=[])
-        for k, v in self._schema.items():
+        for k, v in self.schema.items():
             df_out[k] = self._apply_lookup[v["type"]](df_in, k, v)
             if v.get("remap_dict"):
                 df_out[k] = _remap(
